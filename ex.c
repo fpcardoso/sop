@@ -143,8 +143,8 @@ int main(int argc,char **argv){
          	//Lendo o estado do jogo e imprime na tela 
 			for(i = 0; i < nLinhas; i++)
 	    		printf("%s", matriz[i]);
-			printf("Geração:%d, Processo:%d\n",gens,rank);
-			sleep(1);
+			printf("\nGeração:%d, Processo:%d\n",gens,rank);
+			usleep(500000);
 			for(int j = 0;j < nLinhas;j++){		
 	        	MPI_Isend(matriz[j],nColunas , MPI_CHAR, destination, tag, MPI_COMM_WORLD,&request);
        			MPI_Wait(&request, &status);
@@ -189,8 +189,8 @@ int main(int argc,char **argv){
 	     	//Lendo o estado do jogo e imprime na tela 
  	      	for(i = 0; i < nLinhas; i++)
 		    	printf("%s", matriz2[i]);
-			printf("Geração:%d, Processo:%d\n",gen,rank);
-			sleep(1);
+			printf("\nGeração:%d, Processo:%d\n",gen,rank);
+			usleep(500000);
 			gen++;
 			for(int j = 0;j < nLinhas;j++){		
 	        	MPI_Isend(matriz2[j],nColunas , MPI_CHAR, 0, tag, MPI_COMM_WORLD,&request2);
