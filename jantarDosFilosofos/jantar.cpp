@@ -1,6 +1,7 @@
 #include <iostream>
-#include <thread>
+#include "thread.h"
 #include "semaphore.h"
+#include <unistd.h>
  
 using namespace std;
  
@@ -22,11 +23,24 @@ int philosopher(int n)
     //  - uma chamada para chopstick[first].v()
     //  - uma chamada para chopstick[second].v()
     for(int i = 0; i < ITERATIONS; i++) {
+	
 	cout << "Philosopher " << n << " thinking ...\n";
+	
+	cout << "-----------------------------------"<<endl;
+	chopstick[first].p();
 	for(int i = 0; i < DELAY * 10; i++);
- 
+	//sleep(1);
+	chopstick[first].v();
+
+	
+
 	cout << "Philosopher " << n << " eating ...\n";
+	cout << "-----------------------------------"<<endl;
+	chopstick[second].p();
 	for(int i = 0; i < DELAY; i++);
+	//sleep(1);
+	chopstick[second].v();
+exit(0);	
     }
  
     return n;
@@ -36,7 +50,7 @@ int main()
 {
     cout << "The Dining-Philosophers Problem\n";
  
-    Thread * phil[5];
+    Thread *phil[5];
     for(int i = 0; i < 5; i++)
 	phil[i] = new Thread(&philosopher, i);
  
