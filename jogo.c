@@ -6,7 +6,7 @@
 
 //Numero de linhas e colunas
 #define nLinhas 32
-#define nColunas 82
+#define nColunas 82 
 
 char  *entrada[nLinhas];
 
@@ -74,13 +74,11 @@ void calculoGeracao(char **matriz, int ger) {
                  novaGeracao[i][j] = '"';
                  }
  
-         novaGeracao[i][79] = '"';
-		 novaGeracao[i][81] = '\n';
+         novaGeracao[i][nColunas-3] = '"';
+         novaGeracao[i][nColunas-1] = '\n';
  
 
     }
-
-    /* Passando o resultado da nova geração para a matriz de entrada */
 	char string[nColunas*nLinhas];
 	
 	strcpy(string,novaGeracao[0]);
@@ -96,23 +94,13 @@ void calculoGeracao(char **matriz, int ger) {
 			matriz[li][col] = string[k];
 			col++;
 		}
-	}
-	//	}
-	
-//	}
+	}		
 
-//    for (i=0; i < nLinhas; i++){ < nColunas; j++){
-  //  	for(j=0;j < nColunas; j++){
-	//			
-	//	}
-		
-	//	printf("%s\n",matriz[0]);
-	//	printf("%s\n",matriz[1]);
-	//	exit(0);
-//	}
-//	printf("matriz:%s\n",matriz[i]);
-	//exit(0);
- 
+    /* Passando o resultado da nova geração para a matriz de entrada */
+//    for (i=0; i < nLinhas; i++){
+  //      for (j=0; j < nColunas; j++)
+    //        matriz[i][j] = novaGeracao[i][j];
+   // }
 }
 
 
@@ -163,16 +151,16 @@ int main(int argc,char **argv){
   	 	 	strcpy(matriz[linha], str);
     	   	linha++;    
     	}
-    	fclose(matrizEntrada);
+   		 
+		printf("%c[2J",27);  // Esta linha serve para limpar a tela antes de imprimir o resultado de uma geração    
+ 
+       	//Lendo o estado do jogo e imprime na tela 
+		for(i = 0; i < nLinhas; i++)
+	    	printf("%s", matriz[i]);
+		usleep(500000);
+
 		int gens = 0;
 		while(gens < atoi(argv[2])/2){
-			printf("%c[2J",27);  // Esta linha serve para limpar a tela antes de imprimir o resultado de uma geração    
- 
-         	//Lendo o estado do jogo e imprime na tela 
-			for(i = 0; i < nLinhas; i++)
-	    		printf("%s", matriz[i]);
-			printf("\nGeração:%d, Processo:%d\n",gens,rank);
-			usleep(500000);
 			for(int j = 0;j < nLinhas;j++){		
 	        	MPI_Isend(matriz[j],nColunas , MPI_CHAR, destination, tag, MPI_COMM_WORLD,&request);
        			MPI_Wait(&request, &status);
@@ -183,6 +171,13 @@ int main(int argc,char **argv){
 			MPI_Wait(&request2, &status); //bloks and waits for destination process to receive data
 			
 			calculoGeracao(matriz,1);
+			printf("%c[2J",27);  // Esta linha serve para limpar a tela antes de imprimir o resultado de uma geração    
+ 
+         	//Lendo o estado do jogo e imprime na tela 
+			for(i = 0; i < nLinhas; i++)
+	    		printf("%s\n", matriz[i]);
+			printf("\nGeração:%d, Processo:%d\n",gens,rank);
+			usleep(500000);
 			gens++;
 			
 		}
@@ -197,26 +192,11 @@ int main(int argc,char **argv){
         int i;
 		 
         //Alocar espaço em memória para as matrizes
-		for (i = 0; i < nLinhas; i++ )
-	   	matriz2[i] = (char *) malloc((nColunas) * sizeof( char ));
-	   		
-	   	FILE *matrizEntrada;
-	   	matrizEntrada = fopen(argv[1], "r");
-	
-		if (matrizEntrada == NULL)
-	   	printf ("Não posso abrir o arquivo \"%s\"\n", argv[1]);
-	    
-		char str[nColunas];
-	 	int linha = 0;
-	                                                                            
-	   // Lendo o estado inicial do jogo a partir do arquivo
-		while((fgets(str, nColunas, matrizEntrada) != NULL)&&(linha < nLinhas)){
-		 	strcpy(matriz2[linha], str);
-	      	linha++;    
-   }
+        for (i = 0; i < nLinhas; i++ )
+        	matriz2[i] = (char *) malloc((nColunas) * sizeof( char ));
 
-
-		int gen=0;	
+		int gen = 0;
+				
 		while(gen < atoi(argv[2])/2){
 			for(int k = 0;k < nLinhas;k++){
 				MPI_Irecv(matriz2[k], nColunas, MPI_CHAR, 0, tag,MPI_COMM_WORLD , &request); 
@@ -231,7 +211,7 @@ int main(int argc,char **argv){
     
 	     	//Lendo o estado do jogo e imprime na tela 
  	      	for(i = 0; i < nLinhas; i++)
-		    	printf("%s", matriz2[i]);
+		    	printf("%s\n", matriz2[i]);
 			printf("\nGeração:%d, Processo:%d\n",gen,rank);
 			usleep(500000);
 			gen++;
