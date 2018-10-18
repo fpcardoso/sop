@@ -26,21 +26,21 @@ int philosopher(int n)
 	
 	cout << "Philosopher " << n << " thinking ...\n";
 	
-	cout << "-----------------------------------"<<endl;
-	chopstick[first].p();
+
 	for(int i = 0; i < DELAY * 10; i++);
-	//sleep(1);
-	chopstick[first].v();
+	
+	chopstick[first].p();
+	chopstick[second].p();
 
 	
 
 	cout << "Philosopher " << n << " eating ...\n";
 	cout << "-----------------------------------"<<endl;
-	chopstick[second].p();
 	for(int i = 0; i < DELAY; i++);
-	//sleep(1);
+
+	chopstick[first].v();
 	chopstick[second].v();
-exit(0);	
+	
     }
  
     return n;
