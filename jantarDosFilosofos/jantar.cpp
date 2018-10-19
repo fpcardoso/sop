@@ -9,6 +9,7 @@ const int DELAY = 10000000;
 const int ITERATIONS = 5;
  
 Semaphore chopstick[5];
+Semaphore mensagem;
  
 int philosopher(int n)
 {
@@ -24,8 +25,10 @@ int philosopher(int n)
     //  - uma chamada para chopstick[second].v()
     for(int i = 0; i < ITERATIONS; i++) {
 	
+
+	mensagem.p();
 	cout << "Philosopher " << n << " thinking ...\n";
-	
+	mensagem.v();
 
 	for(int i = 0; i < DELAY * 10; i++);
 	
@@ -33,9 +36,10 @@ int philosopher(int n)
 	chopstick[second].p();
 
 	
-
+//	mensagem.p();
 	cout << "Philosopher " << n << " eating ...\n";
-	cout << "-----------------------------------"<<endl;
+//	mensagem.v();
+
 	for(int i = 0; i < DELAY; i++);
 
 	chopstick[first].v();
