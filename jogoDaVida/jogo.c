@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+//jogo da vida
+
+
 //Numero de linhas e colunas
 #define nLinhas 32
 #define nColunas 82 
