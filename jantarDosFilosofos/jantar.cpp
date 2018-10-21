@@ -2,7 +2,9 @@
 #include "thread.h"
 #include "semaphore.h"
 #include <unistd.h>
- 
+
+
+//jantar dos filosofos 
 using namespace std;
  
 const int DELAY = 10000000;
